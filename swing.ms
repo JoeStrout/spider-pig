@@ -22,9 +22,8 @@ bg.scrollY = 0
 // prepare player sprite
 spriteDisp = display(4)
 spriteDisp.clear
-gfx.fillRect 0,0,80,50, color.yellow
 player = new Sprite
-player.image = gfx.getImage(0,0, 80,50)
+player.image = file.loadImage("pics/SpiderPig.png")
 spriteDisp.sprites.push player
 
 // for now, let's start hanging from a web
@@ -72,6 +71,17 @@ updatePlayer = function(dt=0.016)
 	player.x += player.vx * dt
 	player.y += player.vy * dt
 	
+	// hit the ground
+	if player.y < 0 then
+		player.y = 0
+		player.vy = 0
+		player.vx /= 2
+		if abs(player.vx) < 0.1 then player.vx = 0
+		player.grounded = true
+	else
+		player.grounded = false
+	end if
+	
 	if web.attached then
 		// web: apply a velocity adjustment so as to bring
 		// the player back to the proper distance
@@ -89,20 +99,38 @@ updatePlayer = function(dt=0.016)
 	end if
 end function
 
+shootWeb = function
+	web.x = mouse.x + bg.scrollX
+	web.y = mouse.y + bg.scrollY
+	web.len = mathUtil.distance(player, web)
+	web.attached = true
+	web.startTime = time
+	if web.y > player.y then player.y += 4
+	if web.x > player.x then
+		player.scale = [1,1]
+	else
+		player.scale = [-1,1]	
+	end if	
+end function
+
+releaseWeb = function
+	web.attached = false
+	age = time - web.startTime
+	boost = 1 +  mathUtil.clamp((age - 0.1) * 4, -0.2, 0.2)
+	player.vx *= boost
+	player.vy *= boost
+end function
+
 handleInput = function
 	isDown = mouse.button
 	if isDown and not wasDown and not web.attached then
-		web.x = mouse.x +  bg.scrollX
-		web.y = mouse.y +  bg.scrollY
-		web.len = mathUtil.distance(player, web)
-		web.attached = true
-		web.startTime = time
+		shootWeb
 	else if wasDown and not isDown then
-		web.attached = false
-		age = time - web.startTime
-		boost = 1 +  mathUtil.clamp((age - 0.1) * 4, -0.2, 0.2)
-		player.vx *= boost
-		player.vy *= boost
+		releaseWeb
+	end if
+	if key.pressed("space") and player.grounded then
+		player.vy += 3000
+		player.y += 4
 	end if
 	globals.wasDown = isDown
 end function
