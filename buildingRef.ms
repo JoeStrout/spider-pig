@@ -46,6 +46,8 @@ drawObject = function(data)
 		h = data.height / scaleFactor
 		refg.fillRect x, y - h, w, h, color.gray
 		refg.drawRect x, y - h, w, h, color.silver
+		refg.line x, y-h, x+w, y, color.silver
+		refg.line x+w, y-h, x, y, color.silver
 		
 	end if
 end function
