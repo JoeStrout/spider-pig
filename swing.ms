@@ -2,22 +2,8 @@ import "mathUtil"
 clear
 
 // load background
-gfx.line 0,0, 64,0
-gfx.line 0,0, 0,64
-gfx.fillRect 64,0,64,64, color.gray
-display(7).mode = displayMode.tile
-bg = display(7)
-bg.tileSet = gfx.getImage(0, 0, 128, 64)
-bg.cellSize = 64
-bg.tileSetTileSize = 64
-bg.extent = [100,50]
-for y in range(0, bg.extent[1]-1)
-	for x in range(0, bg.extent[0]-1)
-		bg.setCell x, y, rnd > 0.5
-	end for
-end for
-bg.scrollX = 0
-bg.scrollY = 0
+import "buildingRef"
+bg = buildingRef.refg
 
 // prepare player sprite
 spriteDisp = display(4)

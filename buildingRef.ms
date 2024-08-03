@@ -28,7 +28,7 @@ gfx.clear color.clear
 display(6).mode = displayMode.pixel
 refg = display(6)
 refg.clear color.black, scaledWidth, scaledHeight
-refg.scale = 0.5// scaleFactor
+refg.scale = scaleFactor
 
 drawObject = function(data)
 	x = data.x / scaleFactor
