@@ -1,0 +1,40 @@
+{
+    "Map/SizeTest": {
+        "height": 4300,
+        "width": 2
+    },
+    "activeFile": "City.tmx",
+    "expandedProjectPaths": [
+        "."
+    ],
+    "fileStates": {
+        "City.tmx": {
+            "scale": 0.0625,
+            "selectedLayer": 2,
+            "viewCenter": {
+                "x": 10144,
+                "y": 3048
+            }
+        },
+        "CityTilesMain.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        }
+    },
+    "last.exportedFilePath": "/Users/jstrout/DailyPurge",
+    "last.imagePath": "/Users/jstrout/Data/MiniScript-dev/Spider-Pig/pics",
+    "map.height": 200,
+    "map.lastUsedExportFilter": "JSON map files (*.tmj *.json)",
+    "map.lastUsedFormat": "tmx",
+    "map.width": 600,
+    "openFiles": [
+        "City.tmx",
+        "CityTilesMain.tsx"
+    ],
+    "project": "City.tiled-project",
+    "recentFiles": [
+        "CityTilesMain.tsx",
+        "City.tmx"
+    ],
+    "tileset.lastUsedFormat": "tsx"
+}
