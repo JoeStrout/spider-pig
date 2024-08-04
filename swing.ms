@@ -1,4 +1,6 @@
 import "mathUtil"
+import "gameInput"
+
 clear
 
 // load background
@@ -13,16 +15,15 @@ player.image = file.loadImage("pics/SpiderPig.png")
 spriteDisp.sprites.push player
 
 // for now, let's start hanging from a web
-player.x = 50
-player.y = 400
+player.x = 1150
+player.y = 0
 player.vx = 0
 player.vy = 0
 web = {}
-web.x = 300
-web.y = 400
+web.x = null; web.y = null
 web.len = mathUtil.distance(player, web)
-web.attached = true
-web.startTime = time
+web.attached = false
+web.startTime = 0
 
 gravity = 10000  // pixels/sec^2
 camera = {"x": 480, "y": 320}
@@ -43,15 +44,16 @@ drawWeb = function
 	if not web.attached then return
 	dx = -bg.scrollX
 	dy = -bg.scrollY
-	gfx.line web.x + dx, web.y + dy, player.x + dx, player.y + dy
+	gfx.line web.x + dx, web.y + dy, player.x + dx, player.y + dy,
+	   "#FFFFFFAA", 2
 end function
 
 updatePlayer = function(dt=0.016)
 	// gravity
 	player.vy -= gravity * dt
 	
-	// active boost while swinging
-	if web.attached then player.vx *= 1.04
+//	// active boost while swinging
+//	if web.attached then player.vx *= 1.04
 	
 	// apply velocity
 	player.x += player.vx * dt
@@ -61,8 +63,6 @@ updatePlayer = function(dt=0.016)
 	if player.y < 0 then
 		player.y = 0
 		player.vy = 0
-		player.vx /= 2
-		if abs(player.vx) < 0.1 then player.vx = 0
 		player.grounded = true
 	else
 		player.grounded = false
@@ -114,9 +114,24 @@ handleInput = function
 	else if wasDown and not isDown then
 		releaseWeb
 	end if
-	if key.pressed("space") and player.grounded then
-		player.vy += 3000
-		player.y += 4
+	if player.grounded then
+		// While grounded: run and jump
+		if key.pressed("space") then
+			player.vy += 3000
+			player.y += 4
+		else
+			horz = gameInput.horizontal
+			player.vx = mathUtil.moveTowards(
+			  player.vx, 1000 * horz, 50)
+			if horz > 0 then player.scale = [1,1]
+			if horz < 0 then player.scale = [-1,1]
+		end if
+	else
+		// While in the air: get a slight directional force
+		// (more if web is attached)
+		f = 10 + 40 * web.attached
+		player.vx += f * gameInput.horizontal
+		player.vy += f * gameInput.vertical
 	end if
 	globals.wasDown = isDown
 end function
