@@ -17,6 +17,16 @@ tmjData = f.read
 f.close
 
 print "Parsing " + tmjFileName + "..."
+// The actual tile data is HUGE and takes forever to parse, and we don't
+// need it here.  So, snip it out:
+p1 = -1
+while true
+	p0 = tmjData.indexOf("""data"":[", p1)
+	if p0 == null then break
+	p1 = tmjData.indexOf("]", p0)
+	tmjData = tmjData[:p0] + """data"":[0" + tmjData[p1:]
+	p1 = p0+2
+end while
 tmj = json.parse(tmjData)
 print "Done parsing TMJ data"
 

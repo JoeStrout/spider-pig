@@ -28,10 +28,21 @@ setup = function
 	outer.mapImg = file.loadImage("pics/minimap.png")
 end function
 
-update = function
+update = function(powerups)
+	// draw map image and frame
 	g = displays.ui
 	g.drawImage mapImg, LEFT, BOTTOM
 	g.drawRect LEFT-1, BOTTOM-1, WIDTH+2, HEIGHT+2, "#FFFF00", 2
+	
+	// draw powerups
+	if powerups != null then
+		for p in powerups
+			g.fillRect LEFT + p.x * SCALE - 1, BOTTOM + p.y * SCALE - 1,
+					3, 3, "#00FF00"
+		end for
+	end if
+	
+	// draw player coordinate lines
 	x = player.x * SCALE
 	y = player.y * SCALE
 	if 0 < x < WIDTH then

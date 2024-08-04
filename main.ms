@@ -11,6 +11,10 @@ minimap.setup
 import "buildingRef"
 bg = displays.building
 
+// load pickups
+import "pickups"
+pickups.setup
+
 // prepare player sprite
 player = new Sprite
 player.image = file.loadImage("pics/SpiderPig.png")
@@ -224,7 +228,8 @@ while not key.pressed("escape")
 	handleInput	
 	updateCamera	
 	drawWeb
-	minimap.update
+	minimap.update pickups.Powerup.all
+	pickups.updateAll
 	yield
 end while
 key.clear
