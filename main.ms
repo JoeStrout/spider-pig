@@ -181,6 +181,10 @@ updateCamera = function
 	bg.scrollY = spriteDisp.scrollY
 end function
 
+// HACK for testing:
+bg.scale *= 2
+buildingRef.scaleFactor = bg.scale
+
 wasDown = mouse.button
 while not key.pressed("escape")
 	eraseWeb

@@ -25,3 +25,7 @@ Alien tech powerups:
 Fonts (convert to BMF?):
 - https://craftpix.net/product/cyberpunk-pixel-art-font-effects/
 
+## Sun, Aug 4 2024
+
+OK we have basic mechanics working.  I've created an itch.io page at https://joestrout.itch.io/spider-pig, though it's still secret (draft).  Game seems to play OK in the browser so far.
+
