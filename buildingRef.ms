@@ -2,6 +2,7 @@
 // into a low-res PixelDisplay.
 
 tmjFileName = "City.tmj"
+groundColor = "#FFFF00FF"
 
 import "json"
 import "mapUtil"
@@ -48,7 +49,7 @@ drawObject = function(data)
 		refg.drawRect x, y - h, w, h, color.silver
 		refg.line x, y-h, x+w, y, color.silver
 		refg.line x+w, y-h, x, y, color.silver
-		
+		refg.line x, y, x+w, y, groundColor
 	end if
 end function
 

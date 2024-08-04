@@ -48,25 +48,59 @@ drawWeb = function
 	   "#FFFFFFAA", 2
 end function
 
+// checkGround: check whether there is walkable ground
+// under the player, within `distance` pixels.  If so,
+// return the ground (Y) level.  If not, return null.
+checkGround = function(distance=3)
+	// Absolute ground plane at Y = -32
+	if player.y - 48 - distance < -32 then return -32
+	// Up off the absolute ground, if user is not grounded
+	// and not pressing up, then ignore everything else.
+	if not player.grounded and gameInput.vertical <= 0 then
+		return null
+	end if
+	// Otherwise, look for (for now) ground-color pixels.
+	// We have two support points, one under the front
+	// feet and one under the back feet.
+	if gameInput.vertical < 0 then return null
+	signX = player.scale[0]
+	sf = buildingRef.scaleFactor
+	x0 = (player.x + 10 * signX) / sf
+	x1 = (player.x - 20 * signX) / sf
+	y = (player.y - 48) / sf
+	d = 0
+	ground = buildingRef.groundColor
+	while d < distance
+		if bg.pixel(x0, y) == ground or
+		   bg.pixel(x1, y) == ground then return y * sf
+		y -= 1
+		d += sf
+	end while
+	return null
+end function
+
 updatePlayer = function(dt=0.016)
 	// gravity
 	player.vy -= gravity * dt
 	
 //	// active boost while swinging
 //	if web.attached then player.vx *= 1.04
+
+	// check for hitting the ground
+	if player.vy < 0 then
+		groundY = checkGround(ceil(-player.vy * dt))
+		if groundY == null then
+			player.grounded = false
+		else
+			player.y = groundY + 48
+			player.vy = 0
+			player.grounded = true
+		end if
+	end if
 	
 	// apply velocity
 	player.x += player.vx * dt
 	player.y += player.vy * dt
-	
-	// hit the ground
-	if player.y < 0 then
-		player.y = 0
-		player.vy = 0
-		player.grounded = true
-	else
-		player.grounded = false
-	end if
 	
 	if web.attached then
 		// web: apply a velocity adjustment so as to bring
@@ -119,10 +153,11 @@ handleInput = function
 		if key.pressed("space") then
 			player.vy += 3000
 			player.y += 4
+			player.grounded = false
 		else
 			horz = gameInput.horizontal
 			player.vx = mathUtil.moveTowards(
-			  player.vx, 1000 * horz, 50)
+			  player.vx, 1000 * horz, 300)
 			if horz > 0 then player.scale = [1,1]
 			if horz < 0 then player.scale = [-1,1]
 		end if
@@ -139,6 +174,7 @@ end function
 updateCamera = function
 	camera.x = player.x
 	camera.y = player.y
+	if camera.y < 240 then camera.y = 240
 	spriteDisp.scrollX = camera.x - 480
 	spriteDisp.scrollY = camera.y - 320
 	bg.scrollX = spriteDisp.scrollX
