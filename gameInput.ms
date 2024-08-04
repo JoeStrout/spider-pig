@@ -18,6 +18,15 @@ vertical = function
 	  key.pressed("c") - key.pressed("t")    // dvorak IJKL
 end function
 
+grabWall = function
+	return key.pressed("left shift") or key.pressed("right shift")
+end function
+
+grabFloor = function
+	return grabWall or vertical > 0
+end function
+
+
 if locals == globals then
 	clear
 	gfx.color = color.gray

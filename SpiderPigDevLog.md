@@ -43,3 +43,9 @@ So, what if we had another control for that?  Shift maybe?  That could be just t
 
 The other main mechanic we don't yet have is auto-targeting of webs (and restricting the attachment to buildings).  That's another important goal for today.
 
+OK, so I've added both these features (shift-grab and auto-targeting), and it's feeling better.  Shift does seem easier to me for landing on a floor (though pressing Up also works).  And it'll certainly be easier for wall clinging.
+
+I think maybe it's time to start scattering pickups around the city.  There are two kinds: powerups, which modify the mechanics as above; and simple collectibles (food), which are for the completionists.
+
+Oh, and I guess we also need some overall goal besides just "complete everything" — something the speed-runners have to do to complete the level.  Ideally this would be something you can see but not reach until you've gotten all the powerups.  Well, maybe not all.  Maybe it's something like: you can only reach the exit (a floating UFO?) by gliding, and Glide is the hardest powerup to get, so you'll probably want the others to help you get that.
+

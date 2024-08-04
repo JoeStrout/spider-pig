@@ -62,8 +62,8 @@ checkGround = function(distance=3)
 	// Absolute ground plane at Y = -32
 	if player.y - 48 - distance < -32 then return -32
 	// Up off the absolute ground, if user is not grounded
-	// and not pressing up, then ignore everything else.
-	if not player.grounded and gameInput.vertical <= 0 then
+	// and grabbing floor, then ignore everything else.
+	if not player.grounded and not gameInput.grabFloor then
 		return null
 	end if
 	// Otherwise, look for (for now) ground-color pixels.
