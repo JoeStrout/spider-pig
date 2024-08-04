@@ -1,6 +1,11 @@
 // Module to draw the building reference layer
 // into a low-res PixelDisplay.
 
+import "importUtil"
+ensureImport "displays"
+
+displays.setupIfNeeded
+
 tmjFileName = "City.tmj"
 groundColor = "#FFFF00FF"
 
@@ -18,33 +23,35 @@ print "Done parsing TMJ data"
 refLayer = tmj.layers[-1]
 print "Rendering " + refLayer.name
 
-scaleFactor = 8
-fullWidth = 600 * 32
+scaleFactor = 16
+fullWidth = 600 * 64
 scaledWidth = fullWidth / scaleFactor
-fullHeight = 200 * 32
+fullHeight = 200 * 64
 scaledHeight = fullHeight / scaleFactor
 
-clear
-gfx.clear color.clear
-display(6).mode = displayMode.pixel
-refg = display(6)
+// Our Tiled file is defined at half full scale, unfortunately.
+// Maybe we can fix that?  But for now, here's the proper
+// "tiled scale factor":
+tsf = scaleFactor / 2
+
+refg = displays.building
 refg.clear color.clear, scaledWidth, scaledHeight
 refg.scale = scaleFactor
 
 drawObject = function(data)
-	x = data.x / scaleFactor
-	y = refg.height - data.y / scaleFactor
+	x = data.x / tsf
+	y = refg.height - data.y / tsf
 	if data.hasIndex("polygon") then
 		pts = []
 		for p in data.polygon
-			pts.push [x + p.x / scaleFactor,
-			  y - p.y / scaleFactor]
+			pts.push [x + p.x / tsf,
+			  y - p.y / tsf]
 		end for
 		refg.fillPoly pts, color.gray
 		refg.drawPoly pts, color.silver
 	else
-		w = data.width / scaleFactor
-		h = data.height / scaleFactor
+		w = data.width / tsf
+		h = data.height / tsf
 		refg.fillRect x, y - h, w, h, color.gray
 		refg.drawRect x, y - h, w, h, color.silver
 		refg.line x, y-h, x+w, y, color.silver
@@ -56,3 +63,5 @@ end function
 for obj in refLayer.objects
 	drawObject obj
 end for
+
+text.clear

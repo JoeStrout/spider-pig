@@ -1,20 +1,28 @@
-import "mathUtil"
-import "gameInput"
+import "importUtil"
+ensureImport "mathUtil"
+ensureImport "gameInput"
+ensureImport "displays"
+ensureImport "minimap"
 
-clear
+displays.setup
+minimap.setup
 
 // load background
 import "buildingRef"
-bg = buildingRef.refg
+bg = displays.building
 
 // prepare player sprite
-spriteDisp = display(4)
-spriteDisp.clear
 player = new Sprite
 player.image = file.loadImage("pics/SpiderPig.png")
-spriteDisp.sprites.push player
+sprites = displays.sprite.sprites
+sprites.push player
 
-// for now, let's start hanging from a web
+// and web sprite
+webSprite = new Sprite
+webSprite.image = Image.create(10, 2, "#FFFFFFAA")
+sprites.insert 0, webSprite
+
+// initialize player
 player.x = 1150
 player.y = 0
 player.vx = 0
@@ -28,24 +36,23 @@ web.startTime = 0
 gravity = 10000  // pixels/sec^2
 camera = {"x": 480, "y": 320}
 
-gfx.clear color.clear
-gfx.line web.x, web.y, player.x, player.y
-
 dot = function(ax,ay, bx,by)
 	return ax*bx +  ay*by
 end function
 
 eraseWeb = function
 	if not web.attached then return
-	gfx.clear color.clear
+	webSprite.scale = 0
 end function
 
 drawWeb = function
 	if not web.attached then return
-	dx = -bg.scrollX
-	dy = -bg.scrollY
-	gfx.line web.x + dx, web.y + dy, player.x + dx, player.y + dy,
-	   "#FFFFFFAA", 2
+	dx = web.x - player.x
+	dy = web.y - player.y
+	webSprite.scale = [sqrt(dx^2 + dy^2)*0.1, 1]
+	webSprite.x = player.x + dx/2
+	webSprite.y = player.y + dy/2
+	webSprite.rotation = atan(dy, dx) * 180/pi
 end function
 
 // checkGround: check whether there is walkable ground
@@ -200,15 +207,15 @@ updateCamera = function
 	camera.x = player.x
 	camera.y = player.y
 	if camera.y < 240 then camera.y = 240
-	spriteDisp.scrollX = camera.x - 480
-	spriteDisp.scrollY = camera.y - 320
-	bg.scrollX = spriteDisp.scrollX
-	bg.scrollY = spriteDisp.scrollY
+	displays.sprite.scrollX = camera.x - 480
+	displays.sprite.scrollY = camera.y - 320
+	bg.scrollX = displays.sprite.scrollX
+	bg.scrollY = displays.sprite.scrollY
 end function
 
 // HACK for testing: double-size city?
-bg.scale *= 2
-buildingRef.scaleFactor = bg.scale
+//bg.scale *= 2
+//buildingRef.scaleFactor = bg.scale
 
 wasDown = mouse.button
 while not key.pressed("escape")
@@ -217,6 +224,7 @@ while not key.pressed("escape")
 	handleInput	
 	updateCamera	
 	drawWeb
+	minimap.update
 	yield
 end while
 key.clear
