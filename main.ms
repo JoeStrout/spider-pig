@@ -119,9 +119,34 @@ updatePlayer = function(dt=0.016)
 	end if
 end function
 
+attachable = function(x,y)
+	sf = buildingRef.scaleFactor
+	return bg.pixel(x/sf, y/sf) != "#00000000"
+end function
+
 shootWeb = function
-	web.x = mouse.x + bg.scrollX
-	web.y = mouse.y + bg.scrollY
+	// find a valid attachment point
+	targetX = mouse.x + bg.scrollX
+	targetY = mouse.y + bg.scrollY
+	dist = mathUtil.distance([targetX, targetY], player)
+	stepx = 16 * ((targetX - player.x) / dist)
+	stepy = 16 * ((targetY - player.y) / dist)
+	steps = 0
+	while true
+		x = targetX + stepx * steps * 2
+		y = targetY + stepy * steps * 2
+		if attachable(x, y) then break
+		x = targetX - stepx * steps
+		y = targetY - stepy * steps
+		if attachable(x, y) then break
+		steps += 1
+		if steps > 8 then // no attachment point found
+			return
+		end if
+	end while
+	
+	web.x = x
+	web.y = y
 	web.len = mathUtil.distance(player, web)
 	web.attached = true
 	web.startTime = time
@@ -181,7 +206,7 @@ updateCamera = function
 	bg.scrollY = spriteDisp.scrollY
 end function
 
-// HACK for testing:
+// HACK for testing: double-size city?
 bg.scale *= 2
 buildingRef.scaleFactor = bg.scale
 

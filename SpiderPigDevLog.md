@@ -29,3 +29,17 @@ Fonts (convert to BMF?):
 
 OK we have basic mechanics working.  I've created an itch.io page at https://joestrout.itch.io/spider-pig, though it's still secret (draft).  Game seems to play OK in the browser so far.
 
+So let's consider the powerups that you can collect to change the mechanics:
+
+- Run Speed Boost (1 and 2)
+- Jump Boost (1 and 2)
+- Glide (hold jump while falling to trade Y velocity for X velocity)
+- Wall Cling (hold away(?) while passing wall to cling to it
+- Web Length (shoot web farther than the click, still auto-targeting)
+
+I wonder about the wall cling — pushing away from a wall is kind of standard, but I always find it super difficult, because of course pushing away from a wall makes it harder to actually run into it.  And impossible to _run_ to a wall and then up it; you have to have sufficient momentum to overcome the fact that you're pushing the other way.  Works OK with Up because gravity ensures you continue to go down anyway, but with Left/Right it's quite difficult.
+
+So, what if we had another control for that?  Shift maybe?  That could be just the "cling" button, and it could work for both horizontal and vertical surfaces.  That's probably worth prototyping today.
+
+The other main mechanic we don't yet have is auto-targeting of webs (and restricting the attachment to buildings).  That's another important goal for today.
+
