@@ -10,10 +10,10 @@
     "fileStates": {
         "City.tmx": {
             "scale": 0.0625,
-            "selectedLayer": 2,
+            "selectedLayer": 1,
             "viewCenter": {
-                "x": 10144,
-                "y": 3048
+                "x": 6512,
+                "y": 4160
             }
         },
         "CityTilesMain.tsx": {
@@ -21,8 +21,8 @@
             "scaleInEditor": 1
         }
     },
-    "last.exportedFilePath": "/Users/jstrout/DailyPurge",
-    "last.imagePath": "/Users/jstrout/Data/MiniScript-dev/Spider-Pig/pics",
+    "last.exportedFilePath": "/home/armen/Workspace/spider-pig",
+    "last.imagePath": "/home/armen/Workspace/spider-pig/pics",
     "map.height": 200,
     "map.lastUsedExportFilter": "JSON map files (*.tmj *.json)",
     "map.lastUsedFormat": "tmx",
