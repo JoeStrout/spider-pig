@@ -3,6 +3,7 @@ ensureImport "mathUtil"
 ensureImport "gameInput"
 ensureImport "displays"
 ensureImport "minimap"
+ensureImport "pickups"
 
 displays.setup
 minimap.setup
@@ -10,10 +11,6 @@ minimap.setup
 // load background
 import "buildingRef"
 bg = displays.building
-
-// load pickups
-import "pickups"
-pickups.setup
 
 // prepare player sprite
 player = new Sprite
@@ -31,6 +28,8 @@ player.x = 1150
 player.y = 0
 player.vx = 0
 player.vy = 0
+player.power = {}
+
 web = {}
 web.x = null; web.y = null
 web.len = mathUtil.distance(player, web)
@@ -39,6 +38,8 @@ web.startTime = 0
 
 gravity = 10000  // pixels/sec^2
 camera = {"x": 480, "y": 320}
+
+pickups.setup
 
 dot = function(ax,ay, bx,by)
 	return ax*bx +  ay*by

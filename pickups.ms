@@ -22,10 +22,11 @@ Pickup.place = function(tileCol, tileRow)
 end function
 
 Pickup.pickUp = function
-	print "Got: " + self.name
 	self.all.removeVal self
 	Pickup.all.removeVal self
 	displays.sprite.sprites.removeVal self
+	player.power[self.name] += 1
+	drawSlots
 end function
 
 nextCheckIdx = 0
@@ -58,6 +59,25 @@ Collectible.all = []
 Collectible.place = function(tileCol, tileRow)
 	super.place tileCol, tileRow
 	Collectible.all.push self
+end function
+
+drawSlots = function
+	left = 4
+	bottom = 4
+	g = displays.ui
+	g.drawImage slotPic, left, bottom
+	pp = player.power
+	x = left + 4
+	y = bottom + 14
+	dx = 40
+	if pp.web then g.drawImage tileIndexPicMap[112], x, y
+	if pp.webBoost then g.drawImage tileIndexPicMap[113], x+dx, y
+	if pp.wallCling then g.drawImage tileIndexPicMap[115], x+dx*2, y
+	if pp.speedBoost then g.drawImage tileIndexPicMap[116], x+dx*3, y
+	if pp.speedBoost>1 then g.drawImage tileIndexPicMap[116], x+dx*4, y
+	if pp.jumpBoost then g.drawImage tileIndexPicMap[117], x+dx*5, y
+	if pp.jumpBoost>1 then g.drawImage tileIndexPicMap[117], x+dx*6, y
+	if pp.glide then g.drawImage tileIndexPicMap[114], x+dx*7, y
 end function
 
 
@@ -98,6 +118,13 @@ setup = function
 			if e != "0" and e != "" then addFromTileIndex val(e) - firstgid, x, y
 		end for
 	end for
+	
+	outer.slotPic = file.loadImage("pics/powerup-slots.png")
+	player.ability = {}
+	for power in ["web", "webBoost", "glide", "wallCling", "speedBoost", "jumpBoost"]
+		player.power[power] = 0
+	end for
+	drawSlots
 end function
 
 if locals == globals then
