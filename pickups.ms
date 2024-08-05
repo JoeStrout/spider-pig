@@ -108,6 +108,9 @@ setup = function
 	
 	p1 = -1
 	p0 = tmjData.indexOf("""data"":[", p1)
+	// CityOverlay is now the *second* layer, so:
+	p0 = tmjData.indexOf("""data"":[", p0+5)
+	
 	p1 = tmjData.indexOf("]", p0)
 	data = tmjData[p0 + 8: p1]
 	globals.lines = data.split(char(10))
