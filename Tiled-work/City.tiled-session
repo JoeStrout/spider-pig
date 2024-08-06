@@ -9,15 +9,26 @@
     ],
     "fileStates": {
         "City.tmx": {
-            "scale": 0.0625,
-            "selectedLayer": 2,
+            "scale": 1.5,
+            "selectedLayer": 1,
             "viewCenter": {
-                "x": 10144,
-                "y": 3048
+                "x": 720,
+                "y": 6273.333333333333
             }
         },
         "CityTilesMain.tsx": {
             "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "CityTilesOverlay.tsx": {
+            "scaleInDock": 1
+        },
+        "building1.tsx": {
+            "scaleInDock": 3,
+            "scaleInEditor": 1
+        },
+        "building2.tsx": {
+            "scaleInDock": 2,
             "scaleInEditor": 1
         }
     },
@@ -29,10 +40,14 @@
     "map.width": 600,
     "openFiles": [
         "City.tmx",
-        "CityTilesMain.tsx"
+        "CityTilesMain.tsx",
+        "building1.tsx",
+        "building2.tsx"
     ],
     "project": "City.tiled-project",
     "recentFiles": [
+        "building2.tsx",
+        "building1.tsx",
         "CityTilesMain.tsx",
         "City.tmx"
     ],
