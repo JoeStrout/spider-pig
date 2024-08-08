@@ -30,6 +30,8 @@ player.x = 1150
 player.y = 0
 player.vx = 0
 player.vy = 0
+player.grounded = true
+player.onWall = false
 player.power = {}
 
 web = {}
@@ -93,9 +95,37 @@ checkGround = function(distance=3)
 	return null
 end function
 
+DEBUG = false
+checkWall = function(distX=10)
+	// If player doesn't have wall cling ability or is not using it,
+	// then ignore all walls!
+	if not player.ability.wallCling then return null
+	if not gameInput.grabWall and not player.onWall then return null
+	// Otherwise, look for (for now) non-clear pixels next to clear ones.
+	sf = buildingRef.scaleFactor
+	y0 = round((player.y + 10) / sf)
+	y1 = round((player.y - 20) / sf)
+	signX = sign(distX)
+	x = round((player.x + 10 * signX) / sf)
+	d = abs(distX)
+	clearColor = "#00000000"
+	while d > 0
+		if DEBUG then
+			print "x:" + x + "; y0:" + y0 + " -> " + bg.pixel(x,y0) + ", " + bg.pixel(x+signX,y0)
+		end if
+		if (bg.pixel(x,y0) == clearColor and bg.pixel(x+signX,y0) != clearColor) then// or
+//		   (bg.pixel(x,y1) == clearColor and bg.pixel(x+signX,y1) != clearColor) then
+			return x * sf + sf/2 * signX
+		end if
+		x += signX
+		d -= sf
+	end while
+	return null
+end function
+
 updatePlayer = function(dt=0.016)
 	// gravity
-	player.vy -= gravity * dt
+	if not player.onWall then player.vy -= gravity * dt
 	terminalV = -5000
 	if player.ability.glide and gameInput.jump then terminalV = -250
 	if player.vy < terminalV then player.vy = terminalV
@@ -109,9 +139,40 @@ updatePlayer = function(dt=0.016)
 		if groundY == null then
 			player.grounded = false
 		else
+			if not player.grounded then
+				// land on ground!
+				player.vx /= 2
+			end if
 			player.y = groundY + 48
 			player.vy = 0
 			player.grounded = true
+			player.rotation = 0
+		end if
+	end if
+	
+	// check for hitting a wall, if attempting to wall cling
+	if player.vx or player.onWall then
+		signX = sign(player.vx)
+		if signX == 0 then signX = sign(player.rotation)
+		if signX == 0 then signX = player.scale[0]
+		wallX = checkWall(player.vx * dt + 40 * signX)
+		if wallX == null then
+			player.onWall = false
+			player.rotation = mathUtil.moveTowards(player.rotation, 0, 500*dt)
+		else
+			if not player.onWall then
+				// land on wall!
+				player.vy = 0
+			end if
+			player.onWall = true
+			if wallX > player.x then
+				player.x = wallX - 40
+				player.rotation = 90
+			else
+				player.x = wallX + 40
+				player.rotation = -90
+			end if
+			player.vx = 0
 		end if
 	end if
 	
@@ -146,6 +207,12 @@ shootWeb = function
 	targetX = mouse.x + bg.scrollX
 	targetY = mouse.y + bg.scrollY
 	dist = mathUtil.distance([targetX, targetY], player)
+	if not player.ability.webBoost and dist > 300 then
+		factor = 300 / dist
+		dist = 300
+		targetX = player.x + (targetX - player.x) * factor
+		targetY = player.y + (targetY - player.y) * factor
+	end if
 	stepx = 16 * ((targetX - player.x) / dist)
 	stepy = 16 * ((targetY - player.y) / dist)
 	steps = 0
@@ -153,9 +220,11 @@ shootWeb = function
 		x = targetX + stepx * steps * 2
 		y = targetY + stepy * steps * 2
 		if attachable(x, y) then break
-		x = targetX - stepx * steps
-		y = targetY - stepy * steps
-		if attachable(x, y) then break
+		if player.ability.webBoost then
+			x = targetX - stepx * steps
+			y = targetY - stepy * steps
+			if attachable(x, y) then break
+		end if
 		steps += 1
 		if steps > 8 then // no attachment point found
 			return
@@ -190,13 +259,19 @@ handleInput = function
 	else if wasDown and not isDown then
 		releaseWeb
 	end if
-	if player.grounded then
+	if player.grounded or player.onWall then
 		// While grounded: run and jump
 		if gameInput.jump then
 			// jump!
 			player.vy += 2000 + 500 * player.ability.jumpBoost
 			player.y += 4
 			player.grounded = false
+			player.onWall = false
+		else if player.onWall then
+			vert = gameInput.vertical
+			maxSpeed = 300 + 150 * player.ability.speedBoost
+			player.vy = mathUtil.moveTowards(
+			  player.vy, maxSpeed * vert, 300)			
 		else
 			horz = gameInput.horizontal
 			maxSpeed = 500 + 250 * player.ability.speedBoost
