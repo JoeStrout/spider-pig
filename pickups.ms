@@ -25,7 +25,7 @@ Pickup.pickUp = function
 	self.all.removeVal self
 	Pickup.all.removeVal self
 	displays.sprite.sprites.removeVal self
-	player.ability[self.name] += 1
+	if player.ability.hasIndex("self.name") then player.ability[self.name] += 1
 	drawSlots
 end function
 
@@ -56,9 +56,11 @@ end function
 Collectible = new Pickup
 Collectible.name = "Collectible"
 Collectible.all = []
+Collectible.origCount = 0
 Collectible.place = function(tileCol, tileRow)
 	super.place tileCol, tileRow
 	Collectible.all.push self
+	Collectible.origCount = len(Collectible.all)
 end function
 
 drawSlots = function
@@ -79,12 +81,18 @@ drawSlots = function
 	if pp.jumpBoost then g.drawImage tileIndexPicMap[117], x+dx*5, y
 	if pp.jumpBoost>1 then g.drawImage tileIndexPicMap[117], x+dx*6, y
 	if pp.glide then g.drawImage tileIndexPicMap[114], x+dx*7, y
+	
+	foodGot = Collectible.origCount - len(Collectible.all)
+	text.row = 0; text.column = 30
+	text.color = "#FFFF0088"
+	print "Food: " + foodGot + "/" + Collectible.origCount, "    "
 end function
 
 
 tileIndexPicMap = {}
 
 addFromTileIndex = function(overlayTileIndex, col, row)
+	//print "Adding " + overlayTileIndex + " at " + col + "," + row
 	if 112 <= overlayTileIndex <= 117 then
 		// powerups!
 		names = ["web", "webBoost", "glide", "wallCling", "speedBoost", "jumpBoost"]
@@ -96,6 +104,13 @@ addFromTileIndex = function(overlayTileIndex, col, row)
 			tileIndexPicMap[overlayTileIndex] = p.image
 		end if
 		p.place col, row
+	else if 96 <= overlayTileIndex <= 111 then
+		// food collectibles
+		c = new Collectible
+		idx = overlayTileIndex - 96
+		c.name = "Food_" + idx
+		c.image = file.loadImage("pics/food/" + c.name + ".png")
+		c.place col, row
 	end if
 end function
 
