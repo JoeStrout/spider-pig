@@ -18,6 +18,10 @@ vertical = function
 	  key.pressed("c") - key.pressed("t")    // dvorak IJKL
 end function
 
+jump = function
+	return key.pressed("space")
+end function
+
 grabWall = function
 	return key.pressed("left shift") or key.pressed("right shift")
 end function

@@ -49,3 +49,17 @@ I think maybe it's time to start scattering pickups around the city.  There are 
 
 Oh, and I guess we also need some overall goal besides just "complete everything" — something the speed-runners have to do to complete the level.  Ideally this would be something you can see but not reach until you've gotten all the powerups.  Well, maybe not all.  Maybe it's something like: you can only reach the exit (a floating UFO?) by gliding, and Glide is the hardest powerup to get, so you'll probably want the others to help you get that.
 
+
+## Wed, Aug 7 2024
+
+Weekdays are tough!  Didn't manage to touch this for a couple of days.  Let's take stock of where we are.
+
+- Powerups are placed and collectible, but have no actual effect.
+- Food is not yet placed or collectible.
+- Armen has made some truly beautiful tile-based buildings, but they're not yet incorporated into the actual game.
+- There is no end condition.
+- Our hero sprite has only a single frame (though a number of others have been designed in Graphic), so no animation.
+
+So that identifies the major features we need to get working ASAP.  I think tonight I'll focus on the first two.
+
+

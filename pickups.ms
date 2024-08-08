@@ -25,7 +25,7 @@ Pickup.pickUp = function
 	self.all.removeVal self
 	Pickup.all.removeVal self
 	displays.sprite.sprites.removeVal self
-	player.power[self.name] += 1
+	player.ability[self.name] += 1
 	drawSlots
 end function
 
@@ -65,8 +65,9 @@ drawSlots = function
 	left = 4
 	bottom = 4
 	g = displays.ui
+	g.fillRect left, bottom, slotPic.width, slotPic.height, color.clear
 	g.drawImage slotPic, left, bottom
-	pp = player.power
+	pp = player.ability
 	x = left + 4
 	y = bottom + 14
 	dx = 40
@@ -125,9 +126,24 @@ setup = function
 	outer.slotPic = file.loadImage("pics/powerup-slots.png")
 	player.ability = {}
 	for power in ["web", "webBoost", "glide", "wallCling", "speedBoost", "jumpBoost"]
-		player.power[power] = 0
+		player.ability[power] = 0
 	end for
 	drawSlots
+end function
+
+handleCheatKey = function(k)
+	if k < "1" or k > "8" then return false
+	kval = k.val
+	if kval == 1 then player.ability.web = true
+	if kval == 2 then player.ability.webBoost = 1
+	if kval == 3 then player.ability.wallCling = true
+	if kval == 4 then player.ability.speedBoost = 1
+	if kval == 5 then player.ability.speedBoost = 2
+	if kval == 6 then player.ability.jumpBoost = 1
+	if kval == 7 then player.ability.jumpBoost = 2
+	if kval == 8 then player.ability.glide = true
+	drawSlots
+	return true
 end function
 
 if locals == globals then

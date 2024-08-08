@@ -8,6 +8,8 @@ ensureImport "pickups"
 displays.setup
 minimap.setup
 
+CHEATS_ENABLED = true
+
 // load background
 import "buildingRef"
 bg = displays.building
@@ -94,6 +96,9 @@ end function
 updatePlayer = function(dt=0.016)
 	// gravity
 	player.vy -= gravity * dt
+	terminalV = -5000
+	if player.ability.glide and gameInput.jump then terminalV = -250
+	if player.vy < terminalV then player.vy = terminalV
 	
 //	// active boost while swinging
 //	if web.attached then player.vx *= 1.04
@@ -181,20 +186,22 @@ end function
 handleInput = function
 	isDown = mouse.button
 	if isDown and not wasDown and not web.attached then
-		shootWeb
+		if player.ability.web then shootWeb
 	else if wasDown and not isDown then
 		releaseWeb
 	end if
 	if player.grounded then
 		// While grounded: run and jump
-		if key.pressed("space") then
-			player.vy += 3000
+		if gameInput.jump then
+			// jump!
+			player.vy += 2000 + 500 * player.ability.jumpBoost
 			player.y += 4
 			player.grounded = false
 		else
 			horz = gameInput.horizontal
+			maxSpeed = 500 + 250 * player.ability.speedBoost
 			player.vx = mathUtil.moveTowards(
-			  player.vx, 1000 * horz, 300)
+			  player.vx, maxSpeed * horz, 300)
 			if horz > 0 then player.scale = [1,1]
 			if horz < 0 then player.scale = [-1,1]
 		end if
@@ -205,7 +212,17 @@ handleInput = function
 		player.vx += f * gameInput.horizontal
 		player.vy += f * gameInput.vertical
 	end if
+	if key.available then
+		k = key.get
+		handleKey k
+	end if
 	globals.wasDown = isDown
+end function
+
+handleKey = function(k)
+	if CHEATS_ENABLED then
+		if pickups.handleCheatKey(k) then return
+	end if		
 end function
 
 updateCamera = function
