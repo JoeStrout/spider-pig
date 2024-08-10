@@ -5,6 +5,7 @@ ensureImport "displays"
 ensureImport "minimap"
 ensureImport "pickups"
 ensureImport "buildings"
+ensureImport "playerMgr"
 
 displays.setup
 minimap.setup
@@ -16,32 +17,7 @@ import "buildingRef"
 bg = display(6)
 import "buildings"
 buildings.setup
-
-// prepare player sprite
-player = new Sprite
-player.image = file.loadImage("pics/SpiderPig.png")
-sprites = displays.sprite.sprites
-sprites.push player
-
-// and web sprite
-webSprite = new Sprite
-webSprite.image = Image.create(10, 2, "#FFFFFFAA")
-sprites.insert 0, webSprite
-
-// initialize player
-player.x = 1150
-player.y = 0
-player.vx = 0
-player.vy = 0
-player.grounded = true
-player.onWall = false
-player.power = {}
-
-web = {}
-web.x = null; web.y = null
-web.len = mathUtil.distance(player, web)
-web.attached = false
-web.startTime = 0
+playerMgr.setup
 
 gravity = 10000  // pixels/sec^2
 camera = {"x": 480, "y": 320}
@@ -126,175 +102,9 @@ checkWall = function(distX=10)
 	return null
 end function
 
-updatePlayer = function(dt=0.016)
-	// gravity
-	if not player.onWall then player.vy -= gravity * dt
-	terminalV = -5000
-	if player.ability.glide and gameInput.jump then terminalV = -250
-	if player.vy < terminalV then player.vy = terminalV
-	
-//	// active boost while swinging
-//	if web.attached then player.vx *= 1.04
-
-	// check for hitting the ground
-	if player.vy < 0 then
-		groundY = checkGround(ceil(-player.vy * dt))
-		if groundY == null then
-			player.grounded = false
-		else
-			if not player.grounded then
-				// land on ground!
-				player.vx /= 2
-			end if
-			player.y = groundY + 48
-			player.vy = 0
-			player.grounded = true
-			player.rotation = 0
-		end if
-	end if
-	
-	// check for hitting a wall, if attempting to wall cling
-	if player.vx or player.onWall then
-		signX = sign(player.vx)
-		if signX == 0 then signX = sign(player.rotation)
-		if signX == 0 then signX = player.scale[0]
-		wallX = checkWall(player.vx * dt + 40 * signX)
-		if wallX == null then
-			player.onWall = false
-			player.rotation = mathUtil.moveTowards(player.rotation, 0, 500*dt)
-		else
-			if not player.onWall then
-				// land on wall!
-				player.vy = 0
-			end if
-			player.onWall = true
-			if wallX > player.x then
-				player.x = wallX - 40
-				player.rotation = 90
-			else
-				player.x = wallX + 40
-				player.rotation = -90
-			end if
-			player.vx = 0
-		end if
-	end if
-	
-	// apply velocity
-	player.x += player.vx * dt
-	player.y += player.vy * dt
-	
-	if web.attached then
-		// web: apply a velocity adjustment so as to bring
-		// the player back to the proper distance
-		dist = mathUtil.distance(player, web)
-		if dist > web.len then
-			ddist = dist - web.len
-			dx = ddist * (web.x - player.x) / web.len
-			dy = ddist * (web.y - player.y) / web.len
-			player.vx += dx / dt
-			player.vy += dy / dt
-			player.x += dx
-			player.y += dy
-		end if
-		
-	end if
-end function
-
 attachable = function(x,y)
 	sf = buildingRef.scaleFactor
 	return bg.pixel(x/sf, y/sf) != "#00000000"
-end function
-
-shootWeb = function
-	// find a valid attachment point
-	targetX = mouse.x + bg.scrollX
-	targetY = mouse.y + bg.scrollY
-	dist = mathUtil.distance([targetX, targetY], player)
-	if not player.ability.webBoost and dist > 300 then
-		factor = 300 / dist
-		dist = 300
-		targetX = player.x + (targetX - player.x) * factor
-		targetY = player.y + (targetY - player.y) * factor
-	end if
-	stepx = 16 * ((targetX - player.x) / dist)
-	stepy = 16 * ((targetY - player.y) / dist)
-	steps = 0
-	while true
-		x = targetX + stepx * steps * 2
-		y = targetY + stepy * steps * 2
-		if attachable(x, y) then break
-		if player.ability.webBoost then
-			x = targetX - stepx * steps
-			y = targetY - stepy * steps
-			if attachable(x, y) then break
-		end if
-		steps += 1
-		if steps > 8 then // no attachment point found
-			return
-		end if
-	end while
-	
-	web.x = x
-	web.y = y
-	web.len = mathUtil.distance(player, web)
-	web.attached = true
-	web.startTime = time
-	if web.y > player.y then player.y += 4
-	if web.x > player.x then
-		player.scale = [1,1]
-	else
-		player.scale = [-1,1]	
-	end if	
-end function
-
-releaseWeb = function
-	web.attached = false
-	age = time - web.startTime
-	boost = 1 +  mathUtil.clamp((age - 0.1) * 4, -0.2, 0.2)
-	player.vx *= boost
-	player.vy *= boost
-end function
-
-handleInput = function
-	isDown = mouse.button
-	if isDown and not wasDown and not web.attached then
-		if player.ability.web then shootWeb
-	else if wasDown and not isDown then
-		releaseWeb
-	end if
-	if player.grounded or player.onWall then
-		// While grounded: run and jump
-		if gameInput.jump then
-			// jump!
-			player.vy += 2000 + 500 * player.ability.jumpBoost
-			player.y += 4
-			player.grounded = false
-			player.onWall = false
-		else if player.onWall then
-			vert = gameInput.vertical
-			maxSpeed = 300 + 150 * player.ability.speedBoost
-			player.vy = mathUtil.moveTowards(
-			  player.vy, maxSpeed * vert, 300)			
-		else
-			horz = gameInput.horizontal
-			maxSpeed = 500 + 250 * player.ability.speedBoost
-			player.vx = mathUtil.moveTowards(
-			  player.vx, maxSpeed * horz, 300)
-			if horz > 0 then player.scale = [1,1]
-			if horz < 0 then player.scale = [-1,1]
-		end if
-	else
-		// While in the air: get a slight directional force
-		// (more if web is attached)
-		f = 10 + 40 * web.attached
-		player.vx += f * gameInput.horizontal
-		player.vy += f * gameInput.vertical
-	end if
-	if key.available then
-		k = key.get
-		handleKey k
-	end if
-	globals.wasDown = isDown
 end function
 
 handleKey = function(k)
@@ -324,8 +134,8 @@ end function
 wasDown = mouse.button
 while not key.pressed("escape")
 	eraseWeb
-	updatePlayer
-	handleInput	
+	playerMgr.updatePlayer
+	playerMgr.handleInput	
 	updateCamera	
 	drawWeb
 	minimap.update pickups.Powerup.all
