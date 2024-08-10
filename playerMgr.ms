@@ -9,6 +9,11 @@ setup = function
 	images.idle = [
 		file.loadImage("pics/SpiderPig-0.png"),
 		file.loadImage("pics/SpiderPig-1.png")]		
+	images.run = []
+	for i in range(0,3)
+		images.run.push file.loadImage("pics/SpiderPig-Run" + i + ".png")
+	end for
+	images.inAir = images.run[2]
 
 	// prepare player sprite
 	globals.player = new Sprite
@@ -31,7 +36,7 @@ setup = function
 	player.ability = {}
 	player.frameNum = 0
 	player.heartRate = 50		// varies between 50 and 200 based on activity
-	player.tillNextBreath = 0
+	player.tillNextFrame = 0
 	
 	globals.web = {}
 	web.x = null; web.y = null
@@ -113,12 +118,27 @@ updatePlayer = function(dt=0.016)
 	end if
 	
 	player.heartRate = mathUtil.moveTowards(player.heartRate, 50, 0.2)
-	player.tillNextBreath -= dt
-	if player.tillNextBreath < 0 then
-		text.row = 25; text.column = 1; print player.heartRate + "  "
-		player.frameNum = not player.frameNum
-		player.image = images.idle[player.frameNum]
-		player.tillNextBreath = (250 - player.heartRate) / 200
+	player.tillNextFrame -= dt
+	if player.grounded then
+		speed = abs(player.vx)
+		if speed > 1 and images.idle.contains(player.image) then
+			player.tillNextFrame = -1
+			player.frameNum = -1
+		end if
+		if player.tillNextFrame < 0 then
+			if speed > 1 then
+				player.frameNum = (player.frameNum + 1) % images.run.len
+				player.image = images.run[player.frameNum]
+				player.tillNextFrame = (1500 - speed) / 8000
+			else
+				text.row = 25; text.column = 1; print player.heartRate + "  "
+				player.frameNum = not player.frameNum
+				player.image = images.idle[player.frameNum]
+				player.tillNextFrame = (250 - player.heartRate) / 200
+			end if
+		end if
+	else
+		player.image = images.inAir
 	end if
 end function
 
