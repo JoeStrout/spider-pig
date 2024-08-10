@@ -62,4 +62,35 @@ Weekdays are tough!  Didn't manage to touch this for a couple of days.  Let's ta
 
 So that identifies the major features we need to get working ASAP.  I think tonight I'll focus on the first two.
 
+## Fri, Aug 9 2024
+
+OK, the weekend is here and we now have basically 2 days to finish the game!  The deadline is technically Monday morning, but that means I need to finish it Sunday night.
+
+The most urgent features, it seems to me, are:
+
+- Game end detection, and game-over results (including time)
+- Spider-Pig animation
+- Pop-ups with each powerup that tell you what they do and how to use them
+
+I also think we need something to tell the story... maybe a newspaper dispenser, and when you pause in front of it, it pops up a headline?  Or, a news ticker on a building?  But that's less urgent than the above.
+
+Going to start with the pop-ups.
+
+WEB:
+• Click and hold to shoot web
+• Release mouse to release web
+WEB BOOST:
+• Web now shoots much farther!
+JUMP BOOST:
+• 50% higher jump per level!
+SPEED BOOST:
+• 50% faster run speed per level!
+WALL CLING:
+• Hold Shift while approaching a wall to cling to it
+• Shift my be released while on wall
+GLIDE:
+• Hold Jump in the air to glide
+
+OK, got those working.  Getting glide without Wall Cling is *really* hard, so I think we're off to a good start here.  Did a trial glide from the next-to-last building before the bridge; glided over ta a likely place for the UFO, at X=35254, Y=3189.
+
 

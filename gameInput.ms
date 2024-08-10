@@ -30,6 +30,12 @@ grabFloor = function
 	return grabWall or vertical > 0
 end function
 
+anyKey = function
+	for inp in key.keyNames
+		if key.pressed(inp) then return true
+	end for
+	return false
+end function
 
 if locals == globals then
 	clear

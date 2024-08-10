@@ -25,7 +25,7 @@ Pickup.pickUp = function
 	self.all.removeVal self
 	Pickup.all.removeVal self
 	displays.sprite.sprites.removeVal self
-	if player.ability.hasIndex("self.name") then player.ability[self.name] += 1
+	if player.ability.hasIndex(self.name) then player.ability[self.name] += 1
 	drawSlots
 end function
 
@@ -51,6 +51,18 @@ Powerup.all = []
 Powerup.place = function(tileCol, tileRow)
 	super.place tileCol, tileRow
 	Powerup.all.push self
+end function
+
+Powerup.pickUp = function
+	super.pickUp
+	infoPic = file.loadImage("pics/powerup-info/" + self.name + "-info.png")
+	if infoPic == null then return
+	displays.ui.drawImage infoPic, 480-infoPic.width/2, 320-infoPic.height/2
+	displays.ui.drawImage self.image, 480+190, 320+100, 64, 64
+	while gameInput.anyKey; yield; end while
+	while not gameInput.anyKey; yield; end while
+	displays.ui.fillRect 480-infoPic.width/2, 320-infoPic.height/2,
+	  infoPic.width, infoPic.height, color.clear
 end function
 
 Collectible = new Pickup
@@ -112,7 +124,7 @@ addFromTileIndex = function(overlayTileIndex, col, row)
 		c.image = file.loadImage("pics/food/" + c.name + ".png")
 		c.place col, row
 	end if
-end function
+end function	
 
 setup = function
 
