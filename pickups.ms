@@ -10,6 +10,8 @@ BOUNCE = 12		// amplitude (half-height) of bounce, in pixels
 SPEED = 5		// bounce speed factor
 
 tmjFileName = "City.tmj"
+firstgid = 1   // OFI: get this from the JSON, "firstgid" of the overlay layer
+	
 
 Pickup = new Sprite
 Pickup.all = []
@@ -132,8 +134,6 @@ setup = function
 	tmjData = f.read
 	f.close
 
-	firstgid = 129   // OFI: get this from the JSON, "firstgid" of the overlay layer
-	
 	p1 = -1
 	p0 = tmjData.indexOf("""data"":[", p1)
 	// CityOverlay is now the *second* layer, so:

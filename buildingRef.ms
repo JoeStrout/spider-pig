@@ -44,7 +44,9 @@ scaledHeight = fullHeight / scaleFactor
 // "tiled scale factor":
 tsf = scaleFactor / 2
 
-refg = displays.building
+// The reference layer will replace the parallax layer (6).
+display(6).mode = displayMode.pixel
+refg = display(6)
 refg.clear color.clear, scaledWidth, scaledHeight
 refg.scale = scaleFactor
 

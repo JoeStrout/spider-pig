@@ -13,10 +13,11 @@ setup = function
 	display(6).mode = displayMode.sprite
 	outer.parallax = display(6)
 	
-	// City tile layer (or for now, reference layer)
-	display(5).mode = displayMode.pixel
+	// City tile layer
+	display(5).mode = displayMode.tile
 	outer.building = display(5)
-	building.clear color.clear
+	building.tileSet = Image.create(32,32,color.clear)
+	building.clear
 	
 	// City decoration tiles (unused for now)
 	display(4).mode = displayMode.tile

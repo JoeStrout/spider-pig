@@ -4,6 +4,7 @@ ensureImport "gameInput"
 ensureImport "displays"
 ensureImport "minimap"
 ensureImport "pickups"
+ensureImport "buildings"
 
 displays.setup
 minimap.setup
@@ -12,7 +13,9 @@ CHEATS_ENABLED = true
 
 // load background
 import "buildingRef"
-bg = displays.building
+bg = display(6)
+import "buildings"
+buildings.setup
 
 // prepare player sprite
 player = new Sprite
@@ -304,10 +307,14 @@ updateCamera = function
 	camera.x = player.x
 	camera.y = player.y
 	if camera.y < 240 then camera.y = 240
-	displays.sprite.scrollX = camera.x - 480
-	displays.sprite.scrollY = camera.y - 320
-	bg.scrollX = displays.sprite.scrollX
-	bg.scrollY = displays.sprite.scrollY
+	sx = camera.x - 480
+	sy = camera.y - 320
+	displays.sprite.scrollX = sx
+	displays.sprite.scrollY = sy
+	displays.building.scrollX = sx
+	displays.building.scrollY = sy
+	bg.scrollX = sx
+	bg.scrollY = sy
 end function
 
 // HACK for testing: double-size city?
