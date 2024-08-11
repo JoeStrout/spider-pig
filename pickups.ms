@@ -2,9 +2,15 @@
 // includes both powerups (which affect game mechanics) and
 // collectibles (which are just for fun).
 
+// Its setup routine also loads the city overlay layer, and prepares
+// things like the newspaper dispenser, all based on the city overlay
+// Tiled layer.
+
 import "importUtil"
 ensureImport "displays"
 ensureImport "listUtil"
+ensureImport "mapUtil"
+ensureImport "newspaper"
 
 BOUNCE = 12		// amplitude (half-height) of bounce, in pixels
 SPEED = 5		// bounce speed factor
@@ -62,6 +68,7 @@ Powerup.pickUp = function
 	if infoPic == null then return
 	displays.ui.drawImage infoPic, 480-infoPic.width/2, 320-infoPic.height/2
 	displays.ui.drawImage self.image, 480+190, 320+100, 64, 64
+	wait 0.2
 	while gameInput.anyKey; yield; end while
 	while not gameInput.anyKey; yield; end while
 	displays.ui.fillRect 480-infoPic.width/2, 320-infoPic.height/2,
@@ -126,10 +133,21 @@ addFromTileIndex = function(overlayTileIndex, col, row)
 		c.name = "Food_" + idx
 		c.image = file.loadImage("pics/food/" + c.name + ".png")
 		c.place col, row
+	else if overlayTileIndex == 126 then
+		newspaper.placeDispenser col, 199-row
+		displays.decoration.setCell col, 199-row, overlayTileIndex
+		print "newspaper at " + col  + ", " + (199-row)
+	else
+		displays.decoration.setCell col, 199-row, overlayTileIndex
 	end if
 end function	
 
 setup = function
+	displays.decoration.tileSet = file.loadImage("pics/CityTilesOverlay.png")
+	displays.decoration.tileSetTileSize = 32
+	displays.decoration.cellSize = 64
+	displays.decoration.extent = [600,200]
+	displays.decoration.clear null
 
 	f = file.open(tmjFileName, "r")
 	tmjData = f.read

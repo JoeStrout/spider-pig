@@ -160,14 +160,16 @@ shootWeb = function
 	stepy = 16 * ((targetY - player.y) / dist)
 	steps = 0
 	while true
-		x = targetX + stepx * steps * 2
-		y = targetY + stepy * steps * 2
-		if attachable(x, y) then break
 		if player.ability.webBoost then
+			x = targetX + stepx * steps * 2
+			y = targetY + stepy * steps * 2
+			if attachable(x, y) then break
+		end if
+//		if player.ability.webBoost then
 			x = targetX - stepx * steps
 			y = targetY - stepy * steps
 			if attachable(x, y) then break
-		end if
+//		end if
 		steps += 1
 		if steps > 8 then // no attachment point found
 			return

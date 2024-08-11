@@ -6,6 +6,7 @@ ensureImport "minimap"
 ensureImport "pickups"
 ensureImport "buildings"
 ensureImport "playerMgr"
+ensureImport "newspaper"
 
 displays.setup
 minimap.setup
@@ -127,6 +128,8 @@ updateCamera = function
 	displays.sprite.scrollY = sy
 	displays.building.scrollX = sx
 	displays.building.scrollY = sy
+	displays.decoration.scrollX = sx
+	displays.decoration.scrollY = sy
 	//bg.scrollX = sx
 //	bg.scrollY = sy
 end function
@@ -144,6 +147,7 @@ while not key.pressed("escape")
 	drawWeb
 	minimap.update pickups.Powerup.all
 	pickups.updateAll
+	newspaper.update
 	yield
 end while
 key.clear
