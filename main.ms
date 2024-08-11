@@ -1,4 +1,5 @@
 import "importUtil"
+ensureImport "sounds"
 ensureImport "mathUtil"
 ensureImport "gameInput"
 ensureImport "displays"
@@ -11,6 +12,7 @@ ensureImport "ufo"
 ensureImport "background"
 
 displays.setup
+sounds.setup
 background.setup
 minimap.setup
 ufo.setup
