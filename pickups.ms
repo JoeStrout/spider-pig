@@ -18,7 +18,7 @@ Pickup.all = []
 Pickup.place = function(tileCol, tileRow)
 	self.x = (tileCol + 0.5) * 64
 	self.baseY = (200 - tileRow - 0.5) * 64
-	if tileRow == 0 then self.baseY -= 32
+	if tileRow == 199 then self.baseY -= 32
 	self.y = self.baseY
 	displays.sprite.sprites.push self
 	Pickup.all.push self
@@ -107,7 +107,7 @@ end function
 tileIndexPicMap = {}
 
 addFromTileIndex = function(overlayTileIndex, col, row)
-	//print "Adding " + overlayTileIndex + " at " + col + "," + row
+//	print "Adding " + overlayTileIndex + " at " + col + "," + row
 	if 112 <= overlayTileIndex <= 117 then
 		// powerups!
 		names = ["web", "webBoost", "glide", "wallCling", "speedBoost", "jumpBoost"]

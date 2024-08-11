@@ -119,19 +119,22 @@ updatePlayer = function(dt=0.016)
 	
 	player.heartRate = mathUtil.moveTowards(player.heartRate, 50, 0.2)
 	player.tillNextFrame -= dt
-	if player.grounded then
-		speed = abs(player.vx)
+	if player.grounded or player.onWall then
+		speed = abs(player.vx) * player.grounded + abs(player.vy) * player.onWall
 		if speed > 1 and images.idle.contains(player.image) then
 			player.tillNextFrame = -1
 			player.frameNum = -1
 		end if
 		if player.tillNextFrame < 0 then
 			if speed > 1 then
-				player.frameNum = (player.frameNum + 1) % images.run.len
+				if player.onWall and player.vy < 0 then
+					player.frameNum = (player.frameNum + images.run.len - 1) % images.run.len
+				else
+					player.frameNum = (player.frameNum + 1) % images.run.len
+				end if
 				player.image = images.run[player.frameNum]
 				player.tillNextFrame = (1500 - speed) / 8000
 			else
-				text.row = 25; text.column = 1; print player.heartRate + "  "
 				player.frameNum = not player.frameNum
 				player.image = images.idle[player.frameNum]
 				player.tillNextFrame = (250 - player.heartRate) / 200
