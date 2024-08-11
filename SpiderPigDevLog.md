@@ -93,4 +93,10 @@ GLIDE:
 
 OK, got those working.  Getting glide without Wall Cling is *really* hard, so I think we're off to a good start here.  Did a trial glide from the next-to-last building before the bridge; glided over ta a likely place for the UFO, at X=35254, Y=3189.
 
+## Sun, Aug 11 2024
+
+LAST DAY!  I failed to update the log yesterday but I did add player animations and some other refinements.  This morning so far, I've added the newspaper pop-up that gives some of the backstory, and created a simple animated sprite for the UFO.
+
+But before I get to that, I had an idea about roofs/ledges.  I'm thinking you should automatically stop on those whenever you are in freefall, i.e., not attached to a web, and also not pressing Down.  I find this is almost always what I want to do, and playing while holding the Shift key is a pain.
+
 

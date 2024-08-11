@@ -48,9 +48,9 @@ end function
 checkGround = function(distance=3)
 	// Absolute ground plane at Y = -32
 	if player.y - 48 - distance < -32 then return -32
-	// Up off the absolute ground, if user is not grounded
-	// and grabbing floor, then ignore everything else.
-	if not player.grounded and not gameInput.grabFloor then
+	// Up off the absolute ground, if user is web-swinging
+	// and not grabbing floor, then ignore everything else.
+	if web.attached and not gameInput.grabFloor then
 		return null
 	end if
 	// Otherwise, look for groundable tiles.  That's any

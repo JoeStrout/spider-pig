@@ -39,7 +39,7 @@ update = function
 	if iconSprite == null then return
 	iconSprite.y = iconSprite.baseY + 20 * abs(cos(time*4))
 	range = abs(player.x + 50 * player.scale[0] - iconSprite.x)
-	if newspaper == null and range < 20 then
+	if player.y < 20 and newspaper == null and range < 20 then
 		showNewspaper
 	else if newspaper != null and range > 100 then
 		hideNewspaper
