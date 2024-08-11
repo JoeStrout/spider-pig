@@ -163,7 +163,7 @@ end function
 //buildingRef.scaleFactor = bg.scale
 
 wasDown = mouse.button
-while not key.pressed("escape") and not gameOver
+while not gameOver
 	eraseWeb
 	playerMgr.updatePlayer
 	playerMgr.handleInput	
