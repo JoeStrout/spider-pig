@@ -137,6 +137,10 @@ addFromTileIndex = function(overlayTileIndex, col, row)
 		newspaper.placeDispenser col, 199-row
 		displays.decoration.setCell col, 199-row, overlayTileIndex
 		print "newspaper at " + col  + ", " + (199-row)
+	else if overlayTileIndex == 127 then
+		// place Plopper!
+		player.x = col * 64 + 32
+		player.y = (199-row) * 64 + 48
 	else
 		displays.decoration.setCell col, 199-row, overlayTileIndex
 	end if
