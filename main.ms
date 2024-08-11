@@ -13,8 +13,6 @@ minimap.setup
 CHEATS_ENABLED = true
 
 // load background
-import "buildingRef"
-bg = display(6)
 import "buildings"
 buildings.setup
 playerMgr.setup
@@ -54,20 +52,24 @@ checkGround = function(distance=3)
 	if not player.grounded and not gameInput.grabFloor then
 		return null
 	end if
-	// Otherwise, look for (for now) ground-color pixels.
+	// Otherwise, look for groundable tiles.  That's any
+	// nonempty tile with an empty tile above it
+	// (ToDo: plus some other special "ledge" tiles.)
 	// We have two support points, one under the front
 	// feet and one under the back feet.
 	if gameInput.vertical < 0 then return null
 	signX = player.scale[0]
-	sf = buildingRef.scaleFactor
+	bldg = displays.building
+	sf = bldg.cellSize
 	x0 = (player.x + 10 * signX) / sf
 	x1 = (player.x - 20 * signX) / sf
-	y = (player.y - 48) / sf
+	y = (player.y - 32) / sf
 	d = 0
-	ground = buildingRef.groundColor
 	while d < distance
-		if bg.pixel(x0, y) == ground or
-		   bg.pixel(x1, y) == ground then return y * sf
+		if (bldg.cell(x0, y) == null and bldg.cell(x0, y-1) != null) or
+		   (bldg.cell(x1, y) == null and bldg.cell(x1, y-1) != null) then
+			return floor(y) * sf
+		end if
 		y -= 1
 		d += sf
 	end while
@@ -80,21 +82,21 @@ checkWall = function(distX=10)
 	// then ignore all walls!
 	if not player.ability.wallCling then return null
 	if not gameInput.grabWall and not player.onWall then return null
-	// Otherwise, look for (for now) non-clear pixels next to clear ones.
-	sf = buildingRef.scaleFactor
+	// Otherwise, look for non-clear tiles next to clear ones.
+	bldg = displays.building
+	sf = bldg.cellSize
 	y0 = round((player.y + 10) / sf)
-	y1 = round((player.y - 20) / sf)
+	y1 = round((player.y - 60) / sf)
 	signX = sign(distX)
-	x = round((player.x + 10 * signX) / sf)
+	x = floor((player.x) / sf)
 	d = abs(distX)
-	clearColor = "#00000000"
 	while d > 0
 		if DEBUG then
-			print "x:" + x + "; y0:" + y0 + " -> " + bg.pixel(x,y0) + ", " + bg.pixel(x+signX,y0)
+			print "dist:" + distX + "; x:" + x + "; y0:" + y0 + " -> " + bldg.cell(x,y0) + ", " + bldg.cell(x+signX,y0)
 		end if
-		if (bg.pixel(x,y0) == clearColor and bg.pixel(x+signX,y0) != clearColor) then// or
-//		   (bg.pixel(x,y1) == clearColor and bg.pixel(x+signX,y1) != clearColor) then
-			return x * sf + sf/2 * signX
+		if (bldg.cell(x,y0) == null and bldg.cell(x+signX,y0) != null) or
+		   (bldg.cell(x,y1) == null and bldg.cell(x+signX,y1) != null) then
+			return floor(x + (signX > 0)) * sf
 		end if
 		x += signX
 		d -= sf
@@ -103,8 +105,10 @@ checkWall = function(distX=10)
 end function
 
 attachable = function(x,y)
-	sf = buildingRef.scaleFactor
-	return bg.pixel(x/sf, y/sf) != "#00000000"
+	bldg = displays.building
+	col = x / bldg.cellSize
+	row = y / bldg.cellSize
+	return 0 < bldg.cell(col, row)
 end function
 
 handleKey = function(k)
@@ -123,8 +127,8 @@ updateCamera = function
 	displays.sprite.scrollY = sy
 	displays.building.scrollX = sx
 	displays.building.scrollY = sy
-	bg.scrollX = sx
-	bg.scrollY = sy
+	//bg.scrollX = sx
+//	bg.scrollY = sy
 end function
 
 // HACK for testing: double-size city?

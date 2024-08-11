@@ -144,8 +144,8 @@ end function
 
 shootWeb = function
 	// find a valid attachment point
-	targetX = mouse.x + bg.scrollX
-	targetY = mouse.y + bg.scrollY
+	targetX = mouse.x + displays.building.scrollX
+	targetY = mouse.y + displays.building.scrollY
 	dist = mathUtil.distance([targetX, targetY], player)
 	if not player.ability.webBoost and dist > 300 then
 		factor = 300 / dist

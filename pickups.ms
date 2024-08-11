@@ -18,6 +18,7 @@ Pickup.all = []
 Pickup.place = function(tileCol, tileRow)
 	self.x = (tileCol + 0.5) * 64
 	self.baseY = (200 - tileRow - 0.5) * 64
+	if tileRow == 0 then self.baseY -= 32
 	self.y = self.baseY
 	displays.sprite.sprites.push self
 	Pickup.all.push self
