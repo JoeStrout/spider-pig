@@ -72,7 +72,7 @@ updatePlayer = function(dt=0.016)
 		end if
 	end if
 	
-	// check for hitting a wall, if attempting to wall cling
+	// check for hitting a wall
 	if player.vx or player.onWall then
 		signX = sign(player.vx)
 		if signX == 0 then signX = sign(player.rotation)
@@ -82,19 +82,28 @@ updatePlayer = function(dt=0.016)
 			player.onWall = false
 			player.rotation = mathUtil.moveTowards(player.rotation, 0, 500*dt)
 		else
-			if not player.onWall then
-				// land on wall!
-				player.vy = 0
-			end if
-			player.onWall = true
-			if wallX > player.x then
-				player.x = wallX - 40
-				player.rotation = 90
+			canCling = player.ability.wallCling and
+			  (gameInput.grabWall or player.onWall)
+			if not canCling then
+				// No cling ability; just stop when we hit a wall,
+				// IF we are grounded on a roof or ledge
+				if player.grounded and player.y > 20 then player.vx = 0
 			else
-				player.x = wallX + 40
-				player.rotation = -90
+				// Otherwise, cling to the wall and start climbing
+				if not player.onWall then
+					// land on wall!
+					player.vy = 0
+				end if
+				player.onWall = true
+				if wallX > player.x then
+					player.x = wallX - 40
+					player.rotation = 90
+				else
+					player.x = wallX + 40
+					player.rotation = -90
+				end if
+				player.vx = 0
 			end if
-			player.vx = 0
 		end if
 	end if
 	

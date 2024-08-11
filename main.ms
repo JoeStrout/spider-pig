@@ -79,11 +79,7 @@ end function
 
 DEBUG = false
 checkWall = function(distX=10)
-	// If player doesn't have wall cling ability or is not using it,
-	// then ignore all walls!
-	if not player.ability.wallCling then return null
-	if not gameInput.grabWall and not player.onWall then return null
-	// Otherwise, look for non-clear tiles next to clear ones.
+	// Look for non-clear tiles next to clear ones.
 	bldg = displays.building
 	sf = bldg.cellSize
 	y0 = round((player.y + 10) / sf)
