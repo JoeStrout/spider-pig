@@ -118,16 +118,25 @@ handleKey = function(k)
 	end if		
 end function
 
+formatTime = function(t)
+	return floor(t / 60) + ":" + ("00" + str(t % 60))[-2:]
+end function
+
 startTime = time
 lastTime = 0
-drawClock = function
-	newTime = round(time - startTime)
+drawClock = function(newTime)
+	if newTime == null then newTime = round(time - startTime)
 	if newTime == lastTime then return
 	outer.lastTime = newTime
-	s = floor(newTime / 60) + ":" + ("00" + str(newTime % 60))[-2:]
+	s = formatTime(newTime)
 	text.row = 0; text.column = 42
 	text.color = "#FFFF0044"
 	text.print s, "  "
+end function
+
+noteElapsedTime = function
+	globals.elapsedTime = round(time - startTime)
+	drawClock elapsedTime
 end function
 
 updateCamera = function
@@ -165,3 +174,4 @@ while not key.pressed("escape") and not gameOver
 	yield
 end while
 key.clear
+run "showResults"

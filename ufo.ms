@@ -69,6 +69,7 @@ end function
 handleUfoCaught = function
 	ufo.tint = color.yellow
 	globals.gameOver = true
+	noteElapsedTime
 	file.loadSound("/sys/sounds/bling.wav").play
 	for i in range(90)
 		updateSparks
@@ -93,8 +94,8 @@ end function
 
 pointInBounds = function(x, y)
 	// Keep the given xy point on a zero-centered box defined by:
-	halfWidth = 920/2
-	halfHeight = 600/2
+	halfWidth = 910/2
+	halfHeight = 590/2
 
 	// If the object is within the bounds, no need to move
 	if -halfWidth < x <= halfWidth and -halfHeight < y <= halfHeight then

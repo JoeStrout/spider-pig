@@ -85,6 +85,11 @@ Collectible.place = function(tileCol, tileRow)
 	Collectible.origCount = len(Collectible.all)
 end function
 
+formatFound = function
+	foodGot = Collectible.origCount - len(Collectible.all)
+	return foodGot + "/" + Collectible.origCount
+end function
+
 drawSlots = function
 	left = 4
 	bottom = 4
@@ -104,10 +109,9 @@ drawSlots = function
 	if pp.jumpBoost>1 then g.drawImage tileIndexPicMap[117], x+dx*6, y
 	if pp.glide then g.drawImage tileIndexPicMap[114], x+dx*7, y
 	
-	foodGot = Collectible.origCount - len(Collectible.all)
 	text.row = 0; text.column = 25
 	text.color = "#FFFF0044"
-	print "Food: " + foodGot + "/" + Collectible.origCount, "    "
+	print "Food: " + formatFound, "    "
 end function
 
 

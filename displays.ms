@@ -44,7 +44,7 @@ setup = function
 	// Frontmost layer: curtain (also used for QA etc.)
 	display(0).mode = displayMode.off // for now!
 	
-	initialized = true
+	outer.initialized = true
 end function
 
 setupIfNeeded = function
