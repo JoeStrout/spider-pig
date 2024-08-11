@@ -263,6 +263,8 @@ handleInput = function
 		else
 			player.vx = mathUtil.moveTowards(player.vx, maxSpeed * horz, 300)
 		end if
+		if player.vx > 0.1 then player.scale = [1,1]
+		if player.vx < -0.1 then player.scale = [-1,1]
 	end if
 	if key.available then
 		k = key.get

@@ -12,6 +12,7 @@ setup = function
 	// City background (parallax buildings)
 	display(6).mode = displayMode.sprite
 	outer.parallax = display(6)
+	parallax.clear
 	
 	// City tile layer
 	display(5).mode = displayMode.tile

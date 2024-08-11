@@ -8,8 +8,10 @@ ensureImport "buildings"
 ensureImport "playerMgr"
 ensureImport "newspaper"
 ensureImport "ufo"
+ensureImport "background"
 
 displays.setup
+background.setup
 minimap.setup
 ufo.setup
 
@@ -151,8 +153,7 @@ updateCamera = function
 	displays.building.scrollY = sy
 	displays.decoration.scrollX = sx
 	displays.decoration.scrollY = sy
-	//bg.scrollX = sx
-//	bg.scrollY = sy
+	background.updateForCamera sx, sy
 end function
 
 // HACK for testing: double-size city?
