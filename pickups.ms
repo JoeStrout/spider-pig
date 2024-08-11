@@ -105,8 +105,8 @@ drawSlots = function
 	if pp.glide then g.drawImage tileIndexPicMap[114], x+dx*7, y
 	
 	foodGot = Collectible.origCount - len(Collectible.all)
-	text.row = 0; text.column = 30
-	text.color = "#FFFF0088"
+	text.row = 0; text.column = 25
+	text.color = "#FFFF0044"
 	print "Food: " + foodGot + "/" + Collectible.origCount, "    "
 end function
 

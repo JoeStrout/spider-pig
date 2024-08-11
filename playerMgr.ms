@@ -246,12 +246,23 @@ handleInput = function
 				player.heartRate = mathUtil.moveTowards(player.heartRate, 200, 1)
 			end if
 		end if
-	else
-		// While in the air: get a slight directional force
-		// (more if web is attached)
-		f = 10 + 40 * web.attached
+	else if web.attached then
+		// While swinging: get a slight directional force
+		f = 50
 		player.vx += f * gameInput.horizontal
 		player.vy += f * gameInput.vertical
+	else
+		// While in freefall: have some horizontal control authority.
+		// But importantly, don't let this slow us down if already
+		// moving in the right direction!
+		maxSpeed = 300 + 150 * player.ability.speedBoost
+		horz = gameInput.horizontal
+		if (horz > 0 and player.vx > maxSpeed) or 
+		   (horz < 0 and player.vx < -maxSpeed) then
+			// already flying fast in the indicated direction!
+		else
+			player.vx = mathUtil.moveTowards(player.vx, maxSpeed * horz, 300)
+		end if
 	end if
 	if key.available then
 		k = key.get

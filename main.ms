@@ -7,9 +7,13 @@ ensureImport "pickups"
 ensureImport "buildings"
 ensureImport "playerMgr"
 ensureImport "newspaper"
+ensureImport "ufo"
 
 displays.setup
 minimap.setup
+ufo.setup
+
+gameOver = false
 
 CHEATS_ENABLED = true
 
@@ -114,6 +118,18 @@ handleKey = function(k)
 	end if		
 end function
 
+startTime = time
+lastTime = 0
+drawClock = function
+	newTime = round(time - startTime)
+	if newTime == lastTime then return
+	outer.lastTime = newTime
+	s = floor(newTime / 60) + ":" + ("00" + str(newTime % 60))[-2:]
+	text.row = 0; text.column = 42
+	text.color = "#FFFF0044"
+	text.print s, "  "
+end function
+
 updateCamera = function
 	camera.x = player.x
 	camera.y = player.y
@@ -135,7 +151,7 @@ end function
 //buildingRef.scaleFactor = bg.scale
 
 wasDown = mouse.button
-while not key.pressed("escape")
+while not key.pressed("escape") and not gameOver
 	eraseWeb
 	playerMgr.updatePlayer
 	playerMgr.handleInput	
@@ -144,6 +160,8 @@ while not key.pressed("escape")
 	minimap.update pickups.Powerup.all
 	pickups.updateAll
 	newspaper.update
+	ufo.update
+	drawClock
 	yield
 end while
 key.clear
