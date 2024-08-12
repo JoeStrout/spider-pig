@@ -1,4 +1,8 @@
 import "importUtil"
+
+ensureImport "loadingScreen"
+loadingScreen.begin
+
 ensureImport "sounds"
 ensureImport "mathUtil"
 ensureImport "gameInput"
@@ -11,11 +15,16 @@ ensureImport "newspaper"
 ensureImport "ufo"
 ensureImport "background"
 
+loadingScreen.drawBar 0.1
 displays.setup
 sounds.setup
+loadingScreen.drawBar 0.2
 background.setup
+loadingScreen.drawBar 0.3
 minimap.setup
+loadingScreen.drawBar 0.4
 ufo.setup
+loadingScreen.drawBar 0.5
 
 gameOver = false
 
@@ -24,12 +33,15 @@ CHEATS_ENABLED = true
 // load background
 import "buildings"
 buildings.setup
+loadingScreen.drawBar 0.8
 playerMgr.setup
+loadingScreen.drawBar 0.9
 
 gravity = 10000  // pixels/sec^2
 camera = {"x": 480, "y": 320}
 
 pickups.setup
+loadingScreen.drawBar 1
 
 dot = function(ax,ay, bx,by)
 	return ax*bx +  ay*by
@@ -160,12 +172,21 @@ end function
 //bg.scale *= 2
 //buildingRef.scaleFactor = bg.scale
 
+updateCamera
+loadingScreen.fadeOut
+
 wasDown = mouse.button
+prevTime = time
 while not gameOver
+	curTime = time
+	dt = curTime - prevTime
+	prevTime = curTime
+	if dt > 0.02 then dt = 0.02
+	
 	eraseWeb
-	playerMgr.updatePlayer
+	playerMgr.updatePlayer dt
 	playerMgr.handleInput	
-	updateCamera	
+	updateCamera
 	drawWeb
 	minimap.update pickups.Powerup.all
 	pickups.updateAll
