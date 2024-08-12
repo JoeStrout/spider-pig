@@ -28,6 +28,12 @@ setup = function
 		pair.push sp2
 		layers.push pair
 	end for
+	
+	outer.street = new Sprite
+	street.image = Image.create(960, 230, "#242927")
+	street.x = 480
+	street.y = 115
+	sprites.push street
 end function
 
 updateForCamera = function(x, y)
@@ -47,6 +53,8 @@ updateForCamera = function(x, y)
 		end if
 		pair[1].y = sp.y
 	end for
+	
+	street.y = 115 - 80 - y
 end function
 
 if locals == globals then
