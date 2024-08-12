@@ -6,7 +6,7 @@ randRange = @mathUtil.randRange
 
 // UFO position:
 X = 35254
-Y = 2120  // 3189
+Y = 2184
 
 ufo = null
 arrow = null
