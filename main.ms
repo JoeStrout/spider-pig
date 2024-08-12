@@ -161,11 +161,17 @@ end function
 //buildingRef.scaleFactor = bg.scale
 
 wasDown = mouse.button
+prevTime = time
 while not gameOver
+	curTime = time
+	dt = curTime - prevTime
+	prevTime = curTime
+	if dt > 0.02 then dt = 0.02
+	
 	eraseWeb
-	playerMgr.updatePlayer
+	playerMgr.updatePlayer dt
 	playerMgr.handleInput	
-	updateCamera	
+	updateCamera
 	drawWeb
 	minimap.update pickups.Powerup.all
 	pickups.updateAll
