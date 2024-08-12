@@ -54,8 +54,8 @@ end function
 // under the player, within `distance` pixels.  If so,
 // return the ground (Y) level.  If not, return null.
 checkGround = function(distance=3)
-	// Absolute ground plane at Y = -32
-	if player.y - 48 - distance < -32 then return -32
+	// Absolute ground plane at Y = 32
+	if player.y - 48 - distance < 32 then return 32
 	// Up off the absolute ground, if user is web-swinging
 	// and not grabbing floor, then ignore everything else.
 	if web.attached and not gameInput.grabFloor then

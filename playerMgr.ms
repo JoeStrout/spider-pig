@@ -92,7 +92,7 @@ updatePlayer = function(dt=0.016)
 			if not canCling then
 				// No cling ability; just stop when we hit a wall,
 				// IF we are grounded on a roof or ledge
-				if player.grounded and player.y > 20 then player.vx = 0
+				if player.grounded and player.y > 84 then player.vx = 0
 			else
 				// Otherwise, cling to the wall and start climbing
 				if not player.onWall then
