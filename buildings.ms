@@ -35,7 +35,8 @@ setup = function
 	end for
 end function
 
-ledgeTiles = [278, 279, 280, 282, 283, 284, 290, 291, 162, 163, 164, 165,
+ledgeTiles = [0, 1, 2, 3, 4, 5, 6, 7, 70, 71,
+	278, 279, 280, 282, 283, 284, 290, 291, 162, 163, 164, 165,
 	24, 25, 26, 27, 136, 137, 138, 139, 140, 141, 142, 143]
 
 // Check whether the player can land at the *bottom* of the given tile.
