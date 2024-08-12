@@ -1,2 +1,2 @@
 clear
-run "main"
+run "title"
