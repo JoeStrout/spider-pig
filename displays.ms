@@ -3,7 +3,6 @@
 initialized = false
 
 setup = function
-	clear
 	// Far background (sky)
 	display(7).mode = displayMode.solidColor
 	outer.sky = display(7)
@@ -43,7 +42,7 @@ setup = function
 	text.clear
 	
 	// Frontmost layer: curtain (also used for QA etc.)
-	display(0).mode = displayMode.off // for now!
+	//display(0).mode = displayMode.off // for now!
 	
 	outer.initialized = true
 end function
