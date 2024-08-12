@@ -61,9 +61,7 @@ checkGround = function(distance=3)
 	if web.attached and not gameInput.grabFloor then
 		return null
 	end if
-	// Otherwise, look for groundable tiles.  That's any
-	// nonempty tile with an empty tile above it
-	// (ToDo: plus some other special "ledge" tiles.)
+	// Otherwise, look for groundable tiles.
 	// We have two support points, one under the front
 	// feet and one under the back feet.
 	if gameInput.vertical < 0 then return null
@@ -75,8 +73,7 @@ checkGround = function(distance=3)
 	y = (player.y - 32) / sf
 	d = 0
 	while d < distance
-		if (bldg.cell(x0, y) == null and bldg.cell(x0, y-1) != null) or
-		   (bldg.cell(x1, y) == null and bldg.cell(x1, y-1) != null) then
+		if buildings.isGroundable(x0, y) or buildings.isGroundable(x1, y) then
 			return floor(y) * sf
 		end if
 		y -= 1
@@ -145,6 +142,7 @@ end function
 
 updateCamera = function
 	camera.x = player.x
+	if camera.x < 480 then camera.x = 480
 	camera.y = player.y
 	if camera.y < 240 then camera.y = 240
 	sx = camera.x - 480

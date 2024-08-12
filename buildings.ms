@@ -33,10 +33,22 @@ setup = function
 			if e >= firstgid then disp.setCell x, 199 - y, e - firstgid
 		end for
 	end for
-
-
 end function
 
+ledgeTiles = [278, 279, 280, 282, 283, 284, 290, 291, 162, 163, 164, 165,
+	24, 25, 26, 27, 136, 137, 138, 139, 140, 141, 142, 143]
+
+// Check whether the player can land at the *bottom* of the given tile.
+isGroundable = function(col, row)
+	idxBelow = disp.cell(col, row - 1)
+	if idxBelow == null then return false  // empty air
+	if idxBelow == 382 or idxBelow == 383 then return false  // sidewalk
+	if ledgeTiles.indexOf(idxBelow) != null then return true  // ledge
+	// If it's not a special ledge tile, and it's not empty air,
+	// then we can land on it as long as it's got air above it.
+	idxAbove = disp.cell(col, row)
+	return idxAbove == null
+end function
 
 if locals == globals then
 	displays.setup

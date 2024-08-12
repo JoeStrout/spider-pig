@@ -115,6 +115,7 @@ updatePlayer = function(dt=0.016)
 	// apply velocity
 	oldx = player.x
 	player.x += player.vx * dt
+	if player.x < 50 then player.x = 50
 	player.y += player.vy * dt
 	
 	if web.attached then
