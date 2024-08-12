@@ -28,7 +28,7 @@ loadingScreen.drawBar 0.5
 
 gameOver = false
 
-CHEATS_ENABLED = true
+CHEATS_ENABLED = false
 
 // load background
 import "buildings"
