@@ -63,6 +63,7 @@ Powerup.place = function(tileCol, tileRow)
 end function
 
 Powerup.pickUp = function
+	sounds.pig.squeal.play 1, 0, mathUtil.randRange(0.9, 1.1)
 	super.pickUp
 	infoPic = file.loadImage("pics/powerup-info/" + self.name + "-info.png")
 	if infoPic == null then return
@@ -83,6 +84,10 @@ Collectible.place = function(tileCol, tileRow)
 	super.place tileCol, tileRow
 	Collectible.all.push self
 	Collectible.origCount = len(Collectible.all)
+end function
+Collectible.pickUp = function
+	super.pickUp
+	sounds.pig.munch.play 1, 0, mathUtil.randRange(0.9, 1.1)
 end function
 
 formatFound = function

@@ -1,4 +1,5 @@
 import "importUtil"
+ensureImport "sounds"
 ensureImport "mathUtil"
 ensureImport "gameInput"
 ensureImport "displays"
@@ -11,6 +12,7 @@ ensureImport "ufo"
 ensureImport "background"
 
 displays.setup
+sounds.setup
 background.setup
 minimap.setup
 ufo.setup
@@ -161,7 +163,7 @@ end function
 //buildingRef.scaleFactor = bg.scale
 
 wasDown = mouse.button
-while not key.pressed("escape") and not gameOver
+while not gameOver
 	eraseWeb
 	playerMgr.updatePlayer
 	playerMgr.handleInput	

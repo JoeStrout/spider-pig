@@ -2,6 +2,7 @@
 // animations, rotation/flip, and sound effects.  It also
 // deals with player input and physics.
 
+randRange = @mathUtil.randRange
 
 setup = function
 	// load all images
@@ -64,6 +65,10 @@ updatePlayer = function(dt=0.016)
 			if not player.grounded then
 				// land on ground!
 				player.vx /= 2
+				sounds.clop.play randRange(0.8, 1), 0, randRange(0.9, 1.1)
+				if player.vy < -2000 then 
+					sounds.pig["oink-wuf"].play randRange(0.8, 1), 0, randRange(0.9, 1.1)
+				end if
 			end if
 			player.y = groundY + 48
 			player.vy = 0
@@ -108,6 +113,7 @@ updatePlayer = function(dt=0.016)
 	end if
 	
 	// apply velocity
+	oldx = player.x
 	player.x += player.vx * dt
 	player.y += player.vy * dt
 	
@@ -123,7 +129,13 @@ updatePlayer = function(dt=0.016)
 			player.vy += dy / dt
 			player.x += dx
 			player.y += dy
-		end if		
+		end if
+		if sign(player.x - web.x) != sign(oldx - web.x) then
+			speed = abs(player.vx)
+			if speed > 2500 then
+				sounds.woosh.play (speed - 2500) / 1000, 0, 1.1 - dist/2000
+			end if
+		end if
 	end if
 	
 	player.heartRate = mathUtil.moveTowards(player.heartRate, 50, 0.2)
